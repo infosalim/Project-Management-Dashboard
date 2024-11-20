@@ -6,7 +6,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 // ROUTE IMPORT 
-
+import projectRoutes from './routes/projectRoutes';
 
 
 // CONFIGURATION 
@@ -25,6 +25,8 @@ app.use(cors());
 app.get('/', (req, res) => {
  res.send('This is home Route');
 });
+
+app.use("/projects", projectRoutes);
 
 // SERVER
 const port = process.env.PORT || 5000;
