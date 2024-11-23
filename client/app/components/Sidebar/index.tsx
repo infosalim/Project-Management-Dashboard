@@ -1,6 +1,6 @@
 "use client";
 
-import { setIsSidebarCollapsed } from "@/app/state";
+import { setIsSidebarCollapsed } from "@/state";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 // import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
 // import { signOut } from "aws-amplify/auth";

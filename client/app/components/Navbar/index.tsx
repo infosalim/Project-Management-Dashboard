@@ -1,4 +1,4 @@
-import { setIsDarkMode, setIsSidebarCollapsed } from '@/app/state';
+import { setIsDarkMode, setIsSidebarCollapsed } from '@/state';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { Menu, Moon, Search, Settings, Sun } from 'lucide-react';
 import Link from 'next/link';
