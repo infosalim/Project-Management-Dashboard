@@ -1,6 +1,6 @@
 import { useGetTasksQuery, useUpdateTaskStatusMutation } from "@/state/api";
 import React from "react";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { DndProvider, DragSourceMonitor, DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Task as TaskType } from "@/state/api";
 import { EllipsisVertical, MessageSquareMore, Plus } from "lucide-react";
@@ -21,7 +21,7 @@ const BoardView = ({ id, setIsModalNewTaskOpen }: BoardProps) => {
     error,
   } = useGetTasksQuery({ projectId: Number(id) });
   const [updateTaskStatus] = useUpdateTaskStatusMutation();
-
+console.log(tasks)
   const moveTask = (taskId: number, toStatus: string) => {
     updateTaskStatus({ taskId, status: toStatus });
   };
@@ -62,14 +62,14 @@ const TaskColumn = ({
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "task",
     drop: (item: { id: number }) => moveTask(item.id, status),
-    collect: (monitor: any) => ({
+    collect: (monitor: DropTargetMonitor) => ({
       isOver: !!monitor.isOver(),
     }),
   }));
 
   const tasksCount = tasks.filter((task) => task.status === status).length;
 
-  const statusColor: any = {
+  const statusColor: Record<string, string> = {
     "To Do": "#2563EB",
     "Work In Progress": "#059669",
     "Under Review": "#D97706",
@@ -129,7 +129,7 @@ const Task = ({ task }: TaskProps) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "task",
     item: { id: task.id },
-    collect: (monitor: any) => ({
+    collect: (monitor: DragSourceMonitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));
@@ -147,8 +147,7 @@ const Task = ({ task }: TaskProps) => {
 
   const PriorityTag = ({ priority }: { priority: TaskType["priority"] }) => (
     <div
-      className={`rounded-full px-2 py-1 text-xs font-semibold ${
-        priority === "Urgent"
+      className={`rounded-full px-2 py-1 text-xs font-semibold ${priority === "Urgent"
           ? "bg-red-200 text-red-700"
           : priority === "High"
             ? "bg-yellow-200 text-yellow-700"
@@ -157,7 +156,7 @@ const Task = ({ task }: TaskProps) => {
               : priority === "Low"
                 ? "bg-blue-200 text-blue-700"
                 : "bg-gray-200 text-gray-700"
-      }`}
+        }`}
     >
       {priority}
     </div>
@@ -168,13 +167,13 @@ const Task = ({ task }: TaskProps) => {
       ref={(instance) => {
         drag(instance);
       }}
-      className={`mb-4 rounded-md bg-white shadow dark:bg-dark-secondary ${
-        isDragging ? "opacity-50" : "opacity-100"
-      }`}
+      className={`mb-4 rounded-md bg-white shadow dark:bg-dark-secondary ${isDragging ? "opacity-50" : "opacity-100"
+        }`}
     >
       {task.attachments && task.attachments.length > 0 && (
         <Image
-          src={`https://pm-s3-images.s3.us-east-2.amazonaws.com/${task.attachments[0].fileURL}`}
+          // src={`https://pm-s3-images.s3.us-east-2.amazonaws.com/${task.attachments[0].fileURL}`}
+          src="/i2.jpg"
           alt={task.attachments[0].fileName}
           width={400}
           height={200}
@@ -226,7 +225,8 @@ const Task = ({ task }: TaskProps) => {
             {task.assignee && (
               <Image
                 key={task.assignee.userId}
-                src={`https://pm-s3-images.s3.us-east-2.amazonaws.com/${task.assignee.profilePictureUrl!}`}
+                // src={`https://pm-s3-images.s3.us-east-2.amazonaws.com/${task.assignee.profilePictureUrl!}`}
+                src="/p1.jpeg"
                 alt={task.assignee.username}
                 width={30}
                 height={30}
@@ -236,7 +236,8 @@ const Task = ({ task }: TaskProps) => {
             {task.author && (
               <Image
                 key={task.author.userId}
-                src={`https://pm-s3-images.s3.us-east-2.amazonaws.com/${task.author.profilePictureUrl!}`}
+                // src={`https://pm-s3-images.s3.us-east-2.amazonaws.com/${task.author.profilePictureUrl!}`}
+                src="/p2.jpeg"
                 alt={task.author.username}
                 width={30}
                 height={30}
